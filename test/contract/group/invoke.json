@@ -1,0 +1,65 @@
+{
+  "rpc_address": "http://127.0.0.1:20336",
+  "payer_address": "AazEvfQPcQ2GEFFPLF1ZLwQ7K5jDn81hve",
+  "payer_password": "111111",
+  "wallet_file_path": "./test.json",
+  "gas_limit": 20000,
+  "gas_price": 0,
+  "abi_path": "./contract/group/groupabi.json",
+  "save_file": "./contract/group/invoke.csv",
+  "function": {
+    "SetContractHash":{
+      "function_name": "SetContractHash",
+      "function_param":{
+        "key":"yy",
+        "hash":"d17d91a831c094c1fd8d8634b8cd6fa9fbaedc99"
+      },
+      "signers":
+           {
+              "m": 1,
+              "signer": {
+                "walletpath": "./contract/oep4TokenTemplate/invoke_wallet.json",
+                "address": "AQf4Mzu1YJrhz9f3aRkkwSm9n3qhXGSh4p",
+                "password": "xinhao"
+              }
+           }
+      ,
+      "pre_exec": false
+    },
+    "GetContractHash": {
+      "function_name": "GetContractHash",
+      "function_param":{
+        "key":"yy"
+      },
+      "pre_exec": true
+    },
+    "GroupTransfer":{
+      "function_name": "GroupTransfer",
+      "function_param":{
+        "from":"ALZVrZrFqoSvqyi38n7mpPoeDp7DMtZ9b6",
+        "to":"AazEvfQPcQ2GEFFPLF1ZLwQ7K5jDn81hve",
+        "Array": [
+          {
+            "key": "String:youle",
+            "value": 100
+          },
+          {
+            "key": "String:laomiao",
+            "value": 100
+          }
+        ]
+      },
+      "signers":[
+           {
+              "m": 1,
+              "signer": {
+                "walletpath": "./contract/oep4TokenTemplate/invoke_wallet.json",
+                "address": "ALZVrZrFqoSvqyi38n7mpPoeDp7DMtZ9b6",
+                "password": "1"
+              }
+           }
+      ],
+      "pre_exec": false
+    }
+  }
+}

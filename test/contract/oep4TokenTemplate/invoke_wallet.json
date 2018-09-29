@@ -1,0 +1,87 @@
+{
+   "name":"MyWallet",
+   "version":"1.1",
+   "scrypt":{
+      "p":8,
+      "n":16384,
+      "r":8,
+      "dkLen":64
+   },
+   "accounts":[
+      {
+            "address": "AazEvfQPcQ2GEFFPLF1ZLwQ7K5jDn81hve",
+            "algorithm": "ECDSA",
+            "enc-alg": "aes-256-gcm",
+            "isDefault": false,
+            "key": "v7JXBUD8LNenVFogew11WcmMI0IoSX385Ye2eQ/4nY4JbM/TViC6tW/ruYRktwFw",
+            "label": "ss",
+            "lock": false,
+            "parameters": {
+                "curve": "P-256"
+            },
+            "publicKey": "035384561673e76c7e3003e705e4aa7aee67714c8b68d62dd1fb3221f48c5d3da0",
+            "salt": "MGIwNWE2YjAzZjcwMjBiYw==",
+            "signatureScheme": "SHA256withECDSA"
+        },
+      {
+         "address":"AY5W6p4jHeZG2jjW6nS1p4KDUhcqLkU6jz",
+         "enc-alg":"aes-256-gcm",
+         "key":"gpgMejEHzawuXG+ghLkZ8/cQsOJcs4BsFgFjSaqE7SC8zob8hqc6cDNhJI/NBkk+",
+         "algorithm":"ECDSA",
+         "salt":"tuLGZOimilSnypT91WrenQ==",
+         "parameters":{
+            "curve":"P-256"
+         },
+         "label":"account1",
+         "publicKey":"03dff4c63267ae5e23da44ace1bc47d0da1eb8d36fd71181dcccf0e872cb7b31fa",
+         "signatureScheme":"SHA256withECDSA",
+         "isDefault":false,
+         "lock":false
+      },
+      {
+         "address":"ALZVrZrFqoSvqyi38n7mpPoeDp7DMtZ9b6",
+         "enc-alg":"aes-256-gcm",
+         "key":"guffI05Eafq9F0j3/eQxHWGo1VN/xpeIkXysEPeH51C2YHYCNnCWTWAdqDB7lonl",
+         "algorithm":"ECDSA",
+         "salt":"oZPg+5YotRWStVsRMYlhfg==",
+         "parameters":{
+            "curve":"P-256"
+         },
+         "label":"account1",
+         "publicKey":"0205bc592aa9121428c4144fcd669ece1fa73fee440616c75624967f83fb881050",
+         "signatureScheme":"SHA256withECDSA",
+         "isDefault":false,
+         "lock":false
+      },
+      {
+         "address":"AQf4Mzu1YJrhz9f3aRkkwSm9n3qhXGSh4p",
+         "enc-alg":"aes-256-gcm",
+         "key":"bBkseVtWdArWNc2OfVnNONt+FV+6RRgvle2ffxYNrOU3bzGzq3dG07PXkzlunfi2",
+         "algorithm":"ECDSA",
+         "salt":"1NF1DK9zgDyB2cAcSRfB6w==",
+         "parameters":{
+            "curve":"P-256"
+         },
+         "label":"account1",
+         "publicKey":"032c5ac79dd3952e8aff79cfc2c6b5b76ca7ab27ffb849dbd1ee15c1f93de3007e",
+         "signatureScheme":"SHA256withECDSA",
+         "isDefault":true,
+         "lock":false
+      },
+      {
+         "address":"ASUwFccvYFrrWR6vsZhhNszLFNvCLA5qS6",
+         "enc-alg":"aes-256-gcm",
+         "key":"P2CK5DPZa+cfrkq9mK/1YeNU13cfPEm3ByUYrYNwrtqk9lc+UoM91UnOddc1wxWs",
+         "algorithm":"ECDSA",
+         "salt":"tlWLpyfD54jM/27IvPXAWg==",
+         "parameters":{
+            "curve":"P-256"
+         },
+         "label":"account2",
+         "publicKey":"021969e20882c19c6287265789f92fcc34b2dedd0e51504e8fbd8360a52b2b5b6e",
+         "signatureScheme":"SHA256withECDSA",
+         "isDefault":false,
+         "lock":false
+      }
+   ]
+}

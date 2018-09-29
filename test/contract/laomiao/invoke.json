@@ -1,0 +1,133 @@
+{
+  "rpc_address": "http://127.0.0.1:20336",
+  "payer_address": "AazEvfQPcQ2GEFFPLF1ZLwQ7K5jDn81hve",
+  "payer_password": "111111",
+  "wallet_file_path": "./test.json",
+  "gas_limit": 20000,
+  "gas_price": 0,
+  "abi_path": "./contract/laomiao/laomiaoabi.json",
+  "save_file": "./contract/laomiao/invoke.csv",
+  "function": {
+    "balanceOf": {
+      "function_name": "balanceOf",
+      "function_param": {
+        "address": "AY5W6p4jHeZG2jjW6nS1p4KDUhcqLkU6jz"
+      },
+      "pre_exec": true
+    },
+    "transferMulti":{
+      "function_name": "transferMulti",
+      "function_param":{
+        "Array":[
+          {
+            "fromAddr": "ByteArray:AY5W6p4jHeZG2jjW6nS1p4KDUhcqLkU6jz",
+            "toAddr": "ByteArray:ALZVrZrFqoSvqyi38n7mpPoeDp7DMtZ9b6",
+            "value": 100
+          },
+          {
+            "fromAddr": "ByteArray:AazEvfQPcQ2GEFFPLF1ZLwQ7K5jDn81hve",
+            "toAddr": "ByteArray:ALZVrZrFqoSvqyi38n7mpPoeDp7DMtZ9b6",
+            "value": 100
+          }
+        ]
+      },
+      "signers":[
+           {
+              "m": 1,
+              "signer": {
+                "walletpath": "./contract/oep4TokenTemplate/invoke_wallet.json",
+                "address": "AY5W6p4jHeZG2jjW6nS1p4KDUhcqLkU6jz",
+                "password": "1"
+              }
+           },
+        {
+              "m": 1,
+              "signer": {
+                "walletpath": "./contract/oep4TokenTemplate/invoke_wallet.json",
+                "address": "AazEvfQPcQ2GEFFPLF1ZLwQ7K5jDn81hve",
+                "password": "111111"
+              }
+           }
+      ],
+      "pre_exec": false
+    },
+    "deploy": {
+      "function_name": "deploy",
+      "function_param": {
+      },
+      "pre_exec": false
+    },
+    "name": {
+      "function_name": "name",
+      "function_param": {
+      },
+      "pre_exec": true
+    },
+    "symbol": {
+      "function_name": "symbol",
+      "function_param": {
+      },
+      "pre_exec": true
+    },
+    "decimals": {
+      "function_name": "decimals",
+      "function_param": {
+      },
+      "pre_exec": true
+    },
+    "totalSupply": {
+      "function_name": "totalSupply",
+      "function_param": {
+      },
+      "pre_exec": true
+    },
+    "transfer": {
+      "function_name": "transfer",
+      "function_param": {
+        "fromAddr": "AY5W6p4jHeZG2jjW6nS1p4KDUhcqLkU6jz",
+        "toAddr": "AazEvfQPcQ2GEFFPLF1ZLwQ7K5jDn81hve",
+        "value": 1
+      },
+      "signers":{
+        "m": 1,
+        "signer":{
+          "walletpath": "./contract/oep4TokenTemplate/invoke_wallet.json",
+          "address": "AY5W6p4jHeZG2jjW6nS1p4KDUhcqLkU6jz",
+          "password": "111"
+        }
+      },
+      "pre_exec": false
+    },
+
+    "inflation": {
+      "function_name": "inflation",
+      "function_param": {
+        "param1": 1
+      },
+      "signers":{
+        "m": 1,
+        "signer":{
+          "walletpath": "./test.json",
+          "address": "AazEvfQPcQ2GEFFPLF1ZLwQ7K5jDn81hve",
+          "password": "111111"
+        }
+      },
+      "pre_exec": false
+    },
+    "recycle": {
+      "function_name": "recycle",
+      "function_param": {
+        "param1": 1
+      },
+      "signers":{
+        "m": 1,
+        "signer":{
+          "walletpath": "./test.json",
+          "address": "AazEvfQPcQ2GEFFPLF1ZLwQ7K5jDn81hve",
+          "password": "111111"
+        }
+      },
+      "pre_exec": false
+    }
+  }
+}
