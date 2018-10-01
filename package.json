@@ -64,6 +64,7 @@
     "cross-fetch": "^2.2.2",
     "elliptic": "^6.4.1",
     "js-sha3": "^0.8.0",
-    "long": "~4"
+    "long": "~4",
+    "ontology-ts-sdk": "^0.9.8"
   }
 }

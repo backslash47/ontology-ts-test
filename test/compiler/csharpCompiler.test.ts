@@ -1,7 +1,7 @@
-import './httpsFix';
+import '../httpsFix';
 
-import { CsCompiler } from '../src/compiler/csCompiler';
-import { loadContract } from './utils';
+import { CsCompiler } from '../../src/compiler/csCompiler';
+import { loadContract } from './../utils';
 
 describe('CSharp compiler test', () => {
   test('test success', async () => {

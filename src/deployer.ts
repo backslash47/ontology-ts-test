@@ -1,7 +1,4 @@
-import { randomBytes } from 'crypto';
-import * as Long from 'long';
-import { DeployCode } from './core/payload/deployCode';
-import { Deploy, Transaction } from './core/transaction';
+import { CONST, Transaction, TransactionBuilder, WebsocketClient } from 'ontology-ts-sdk';
 
 export interface Deployment {
   code: Buffer;
@@ -14,17 +11,19 @@ export interface Deployment {
 }
 
 export interface DeployerOptions extends Deployment {
-  gasLimit?: Long;
-  gasPrice?: Long;
+  gasLimit?: string;
+  gasPrice?: string;
 
   processCallback?: (transaction: Transaction) => Promise<void>;
 }
 
 export class Deployer {
   nodeAddress: string;
+  useSSL: boolean;
 
-  constructor(nodeAddress: string) {
+  constructor(nodeAddress: string, useSSL: boolean = false) {
     this.nodeAddress = nodeAddress;
+    this.useSSL = useSSL;
   }
 
   async deploy({
@@ -35,30 +34,33 @@ export class Deployer {
     author = '',
     email = '',
     description = '',
-    gasPrice = Long.fromNumber(500),
-    gasLimit = Long.fromNumber(20000),
+    gasPrice = '500',
+    gasLimit = '20000000',
     processCallback
   }: DeployerOptions) {
-    const payload = new DeployCode({
-      code,
-      needStorage,
+    const tx = TransactionBuilder.makeDeployCodeTransaction(
+      code.toString('hex'),
       name,
       version,
       author,
       email,
-      description
-    });
-
-    const tx = new Transaction({
-      txType: Deploy,
-      payload,
-      nonce: Long.fromBytes([...randomBytes(4)]).toNumber(),
+      description,
+      needStorage,
       gasPrice,
       gasLimit
-    });
+    );
 
     if (processCallback !== undefined) {
       await processCallback(tx);
+    }
+
+    const url = `${this.useSSL ? 'wss' : 'ws'}://${this.nodeAddress}:${CONST.HTTP_WS_PORT}`;
+    const client = new WebsocketClient(url, false, true);
+
+    try {
+      return await client.sendRawTransaction(tx.serialize(), false, false);
+    } finally {
+      client.close();
     }
   }
 }

@@ -1,7 +1,7 @@
-import './httpsFix';
+import '../httpsFix';
 
-import { PyCompiler } from '../src/compiler/pyCompiler';
-import { loadContract } from './utils';
+import { PyCompiler } from '../../src/compiler/pyCompiler';
+import { loadContract } from '../utils';
 
 describe('Python compiler test', () => {
   test('test success', async () => {
