@@ -1,69 +1,102 @@
-import {
-  CONST,
-  Crypto,
-  Parameter as OntParameter,
-  ParameterType as OntParameterType,
-  Transaction,
-  TransactionBuilder,
-  WebsocketClient
-} from 'ontology-ts-sdk';
-
-import Address = Crypto.Address;
-
-export type ParameterType = 'Boolean' | 'Integer' | 'ByteArray' | 'Struct' | 'Map' | 'String';
-
-export interface Parameter {
-  type: ParameterType;
-  value: any;
-}
+import * as Long from 'long';
+import { APPCALL, PACK } from './common/opCode';
+import { ProgramBuilder } from './common/program';
+import { sleep } from './common/utils';
+import { InvokeCode } from './core/payload/invokeCode';
+import { Invoke, Transaction } from './core/transaction';
+import RpcClient from './network/rpcClient';
+import { Writer } from './utils/writer';
 
 export interface Invoke {
-  contract: string;
+  contractHash: string;
   method: string;
-  parameters: Parameter[];
+  parameters?: any[];
 }
 
 export interface InvokerOptions extends Invoke {
   gasLimit?: string;
   gasPrice?: string;
+  preExec?: boolean;
 
-  processCallback?: (transaction: Transaction) => Promise<void>;
+  processCallback?: (transaction: Transaction) => void;
 }
 
 export class Invoker {
-  nodeAddress: string;
-  useSSL: boolean;
+  rpcAddress: string;
 
-  constructor(nodeAddress: string, useSSL: boolean = false) {
-    this.nodeAddress = nodeAddress;
-    this.useSSL = useSSL;
+  constructor(rpcAddress: string) {
+    this.rpcAddress = rpcAddress;
   }
 
   async invoke({
     method,
-    parameters,
-    contract,
+    parameters = [],
+    contractHash,
     gasPrice = '500',
     gasLimit = '20000000',
     processCallback
   }: InvokerOptions) {
-    const params = parameters.map(
-      (parameter) => new OntParameter('', OntParameterType[parameter.type], parameter.value)
-    );
+    const builder: ProgramBuilder = new ProgramBuilder();
 
-    const tx = TransactionBuilder.makeInvokeTransaction(method, params, new Address(contract), gasPrice, gasLimit);
+    parameters = [method, parameters];
+
+    parameters.reverse().forEach((parameter) => this.pushParam(parameter, builder));
+
+    builder.writeOpCode(APPCALL);
+    builder.writeBytes(new Buffer(contractHash, 'hex'));
+
+    const code = builder.getProgram();
+    const payload = new InvokeCode(code);
+
+    const tx = new Transaction({
+      txType: Invoke,
+      payload,
+      gasPrice: Long.fromString(gasPrice),
+      gasLimit: Long.fromString(gasLimit)
+    });
 
     if (processCallback !== undefined) {
-      await processCallback(tx);
+      processCallback(tx);
     }
 
-    const url = `${this.useSSL ? 'wss' : 'ws'}://${this.nodeAddress}:${CONST.HTTP_WS_PORT}`;
-    const client = new WebsocketClient(url, false, true);
+    const client = new RpcClient(this.rpcAddress);
 
-    try {
-      return await client.sendRawTransaction(tx.serialize(), false, false);
-    } finally {
-      client.close();
+    const w = new Writer();
+    tx.serialize(w);
+
+    const response = await client.sendRawTransaction(w.getBytes(), false);
+
+    if (response.error !== 0) {
+      throw new Error('Failed to deploy contract.');
     }
+
+    await sleep(3000);
+    return await client.getSmartCodeEvent(response.result);
+  }
+
+  pushParam(parameter: any, builder: ProgramBuilder) {
+    if (typeof parameter === 'number') {
+      builder.pushNum(parameter);
+    } else if (typeof parameter === 'string') {
+      builder.pushBytes(new Buffer(parameter));
+    } else if (typeof parameter === 'boolean') {
+      builder.pushBool(parameter);
+    } else if (parameter instanceof Buffer) {
+      builder.pushBytes(parameter);
+    } else if (parameter instanceof Map) {
+      // const mapBytes = getMapBytes(parameter);
+      // builder.pushBytes(mapBytes);
+    } else if (Array.isArray(parameter)) {
+      this.pushStruct(parameter, builder);
+    } else {
+      throw new Error('Unsupported param type');
+    }
+  }
+
+  pushStruct(parameters: any[], builder: ProgramBuilder) {
+    parameters.reverse().forEach((parameter) => this.pushParam(parameter, builder));
+
+    builder.pushNum(parameters.length);
+    builder.writeOpCode(PACK);
   }
 }

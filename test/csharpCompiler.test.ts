@@ -1,14 +1,12 @@
 import '../httpsFix';
 
-import { CsCompiler } from '../../src/compiler/csCompiler';
-import { loadContract } from './../utils';
+import { compile, loadContract } from '../src/index';
 
 describe('CSharp compiler test', () => {
   test('test success', async () => {
     const contract = loadContract('./test/contract/helloWorld/contract.cs');
 
-    const compiler = new CsCompiler();
-    const output = await compiler.compile(contract);
+    const output = await compile({ code: contract, type: 'CSharp' });
 
     expect(output.avm).toBeInstanceOf(Buffer);
     expect(output.avm.length).toBeGreaterThan(0);
@@ -19,7 +17,6 @@ describe('CSharp compiler test', () => {
   test('test failure', async () => {
     const contract = loadContract('./test/contract/helloWorld/contractFailure.cs');
 
-    const compiler = new CsCompiler();
-    await expect(compiler.compile(contract)).rejects.toBeTruthy();
+    await expect(compile({ code: contract, type: 'CSharp' })).rejects.toBeTruthy();
   });
 });

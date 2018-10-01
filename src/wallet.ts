@@ -1,45 +1,44 @@
-import { createHash } from 'crypto';
 import { Address } from './common/address';
 import { programFromParams, programFromPubKey } from './common/program';
+import { sha256 } from './common/utils';
 import { RawSig, Transaction } from './core/transaction';
 import { PrivateKey } from './crypto/privateKey';
-import { PublicKey } from './crypto/publicKey';
-import { Writer } from './utils/writer';
+import { Account, Wallet } from './types';
 
-export class Wallet {
-  privateKey: PrivateKey;
-  publicKey: PublicKey;
-  address: Address;
+export function loadWallet(path: string): Wallet {
+  throw new Error('Unsupported');
+}
 
-  constructor(privateKey: PrivateKey | string | Buffer) {
-    if (privateKey instanceof PrivateKey) {
-      this.privateKey = privateKey;
-    } else {
-      this.privateKey = new PrivateKey(privateKey);
-    }
+export function createWallet(accounts: Account[]): Wallet {
+  return {
+    accounts
+  };
+}
 
-    this.publicKey = this.privateKey.getPublicKey();
-    this.address = Address.fromPubKey(this.publicKey);
-  }
+export function createAccount(privateKey: string): Account {
+  const sk = new PrivateKey(privateKey);
+  const pk = sk.getPublicKey();
+  const address = Address.fromPubKey(pk)
+    .toArray()
+    .toString('hex');
 
-  signTransaction(tx: Transaction) {
-    const w = new Writer();
-    tx.serialize(w);
-    const bytes = w.getBytes();
+  return {
+    address,
+    privateKey
+  };
+}
 
-    const sh1 = createHash('sha256');
-    const sh2 = createHash('sha256');
+export function signTransaction(tx: Transaction, account: Account) {
+  const bytes = tx.serializeUnsigned();
+  const hash = sha256(sha256(bytes));
 
-    sh1.update(bytes);
-    sh2.update(sh1.digest());
-    const hash = sh2.digest();
+  const privateKey = new PrivateKey(account.privateKey);
+  const publicKey = privateKey.getPublicKey();
+  const signature = privateKey.sign(hash);
 
-    const signature = this.privateKey.sign(hash);
+  const invokationSript = programFromParams([signature.serialize()]);
+  const verificationScript = programFromPubKey(publicKey);
 
-    const invokationSript = programFromParams([signature.serialize()]);
-    const verificationScript = programFromPubKey(this.publicKey);
-
-    const sig = new RawSig(invokationSript, verificationScript);
-    tx.addSig(sig);
-  }
+  const sig = new RawSig(invokationSript, verificationScript);
+  tx.addSig(sig);
 }

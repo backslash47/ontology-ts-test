@@ -3,6 +3,7 @@ export type CompilerType = 'CSharp' | 'Python';
 export interface CompilerOutput {
   avm: Buffer;
   abi: Buffer;
+  hash: string;
 }
 
 export class CompilerError extends Error {

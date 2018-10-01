@@ -1,14 +1,12 @@
 import '../httpsFix';
 
-import { PyCompiler } from '../../src/compiler/pyCompiler';
-import { loadContract } from '../utils';
+import { compile, loadContract } from '../src/index';
 
 describe('Python compiler test', () => {
   test('test success', async () => {
     const contract = loadContract('./test/contract/helloWorld/contract.py');
 
-    const compiler = new PyCompiler();
-    const output = await compiler.compile(contract);
+    const output = await compile({ code: contract, type: 'Python' });
 
     expect(output.avm).toBeInstanceOf(Buffer);
     expect(output.avm.length).toBeGreaterThan(0);
@@ -19,7 +17,6 @@ describe('Python compiler test', () => {
   test('test failure', async () => {
     const contract = loadContract('./test/contract/helloWorld/contractFailure.py');
 
-    const compiler = new PyCompiler();
-    await expect(compiler.compile(contract)).rejects.toBeTruthy();
+    await expect(compile({ code: contract, type: 'Python' })).rejects.toBeTruthy();
   });
 });

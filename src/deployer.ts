@@ -1,4 +1,9 @@
-import { CONST, Transaction, TransactionBuilder, WebsocketClient } from 'ontology-ts-sdk';
+import * as Long from 'long';
+import { sleep } from './common/utils';
+import { DeployCode } from './core/payload/deployCode';
+import { Deploy, Transaction } from './core/transaction';
+import RpcClient from './network/rpcClient';
+import { Writer } from './utils/writer';
 
 export interface Deployment {
   code: Buffer;
@@ -14,16 +19,14 @@ export interface DeployerOptions extends Deployment {
   gasLimit?: string;
   gasPrice?: string;
 
-  processCallback?: (transaction: Transaction) => Promise<void>;
+  processCallback?: (transaction: Transaction) => void;
 }
 
 export class Deployer {
-  nodeAddress: string;
-  useSSL: boolean;
+  rpcAddress: string;
 
-  constructor(nodeAddress: string, useSSL: boolean = false) {
-    this.nodeAddress = nodeAddress;
-    this.useSSL = useSSL;
+  constructor(rpcAddress: string) {
+    this.rpcAddress = rpcAddress;
   }
 
   async deploy({
@@ -38,29 +41,39 @@ export class Deployer {
     gasLimit = '20000000',
     processCallback
   }: DeployerOptions) {
-    const tx = TransactionBuilder.makeDeployCodeTransaction(
-      code.toString('hex'),
+    const payload = new DeployCode({
+      code,
+      needStorage,
       name,
       version,
       author,
       email,
-      description,
-      needStorage,
-      gasPrice,
-      gasLimit
-    );
+      description
+    });
+
+    const tx = new Transaction({
+      txType: Deploy,
+      payload,
+      gasPrice: Long.fromString(gasPrice),
+      gasLimit: Long.fromString(gasLimit)
+    });
 
     if (processCallback !== undefined) {
-      await processCallback(tx);
+      processCallback(tx);
     }
 
-    const url = `${this.useSSL ? 'wss' : 'ws'}://${this.nodeAddress}:${CONST.HTTP_WS_PORT}`;
-    const client = new WebsocketClient(url, false, true);
+    const client = new RpcClient(this.rpcAddress);
 
-    try {
-      return await client.sendRawTransaction(tx.serialize(), false, false);
-    } finally {
-      client.close();
+    const w = new Writer();
+    tx.serialize(w);
+
+    const response = await client.sendRawTransaction(w.getBytes(), false);
+
+    if (response.error !== 0) {
+      throw new Error('Failed to deploy contract.');
     }
+
+    await sleep(3000);
+    return await client.getSmartCodeEvent(response.result);
   }
 }
