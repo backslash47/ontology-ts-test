@@ -24,8 +24,17 @@ program
   .description('Deploy compiled smart contract')
   .option('--address', 'RPC node address')
   .option('--privateKey', 'Private key in HEX format')
-  .action(function(file) {
+  .option('--gasLimit', 'GAS Limit')
+  .option('--gasPrice', 'GAS Price')
+  .option('--needStorage', 'True if smart contract needs storage')
+  .option('--name')
+  .option('--version')
+  .option('--author')
+  .option('--email')
+  .option('--description')
+  .action(function(file, options) {
     console.log('deploying: ', file);
+    cli.deployCli(file, options);
   });
 
 program

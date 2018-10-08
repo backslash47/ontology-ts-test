@@ -67,7 +67,7 @@ You will get the packaged code under '/lib'
 npm install -g
 ````
 
-You will be able to call 'ontology-test-cli' command directly. Use option -h for further help.
+You will be able to call 'ontology-ts-test' command directly. Use option -h for further help.
 
 ## Built With
 

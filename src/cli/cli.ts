@@ -1,5 +1,9 @@
 import { writeFileSync } from 'fs';
-import { compile, CompilerType, loadContract } from '../';
+import { compile, CompilerType, deploy, initClient, loadContract } from '../';
+import { loadCompiledContract } from '../common/utils';
+import { Deployment } from '../deployer';
+import { Account } from '../types';
+import { createAccount } from '../wallet';
 
 export function compileCli(input: string, outputAvm?: string, outputAbi?: string): Promise<void> {
   let type: CompilerType;
@@ -27,4 +31,22 @@ export function compileCli(input: string, outputAvm?: string, outputAbi?: string
     writeFileSync(outputAvm, avm);
     writeFileSync(outputAbi, abi);
   });
+}
+
+export interface CliDeployOptions extends Deployment {
+  address: string;
+  privateKey: string;
+  gasPrice: string;
+  gasLimit: string;
+}
+
+export function deployCli(input: string, options: CliDeployOptions) {
+  const { privateKey, address, ...rest } = options;
+
+  const client = initClient({ rpcAddress: address });
+  const account: Account = createAccount(privateKey);
+
+  const contract = loadCompiledContract(input);
+
+  deploy({ client, account, code: contract, ...rest });
 }
