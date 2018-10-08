@@ -1,12 +1,16 @@
 {
-  "name": "ontology-ts-cli",
+  "name": "ontology-ts-test",
   "version": "0.1.0",
   "description": "",
+  "bin": {
+    "ontology-test-cli": "./lib/ontology-test-cli.js"
+  },
   "main": "./lib/index.js",
   "types": "./lib/types/index.d.ts",
   "scripts": {
     "test": "jest",
     "lint": "tslint --project ./",
+    "copy-cli": "copyfiles -f ./src/cli/ontology-test-cli.js ./lib",
     "build:dev": "cross-env NODE_ENV=development webpack --mode development --display-error-details --progress --color",
     "build:prod": "cross-env NODE_ENV=production webpack --mode production --progress --color"
   },
@@ -32,9 +36,9 @@
     "url": "git://github.com/OntologyCommunityDevelopers/ontology-ts-cli"
   },
   "bugs": {
-    "url": "https://github.com/OntologyCommunityDevelopers/ontology-ts-cli/issues"
+    "url": "https://github.com/OntologyCommunityDevelopers/ontology-ts-test/issues"
   },
-  "homepage": "https://github.com/OntologyCommunityDevelopers/ontology-ts-cli",
+  "homepage": "https://github.com/OntologyCommunityDevelopers/ontology-ts-test",
   "devDependencies": {
     "@types/bs58": "^3.0.30",
     "@types/bytebuffer": "~5",
@@ -63,6 +67,8 @@
     "big-integer": "^1.6.36",
     "bs58": "^4.0.1",
     "bytebuffer": "~5",
+    "commander": "^2.18.0",
+    "copyfiles": "^2.1.0",
     "cross-fetch": "^2.2.2",
     "elliptic": "^6.4.1",
     "js-sha3": "^0.8.0",

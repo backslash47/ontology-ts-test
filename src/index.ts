@@ -40,5 +40,7 @@ export function invoke({ client, account, ...rest }: InvokeOptions) {
   });
 }
 
+export { CompilerType } from './compiler';
 export { loadContract, loadCompiledContract } from './common/utils';
 export { loadWallet, createWallet, createAccount } from './wallet';
+export { compileCli } from './cli/cli';

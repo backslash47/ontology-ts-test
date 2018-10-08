@@ -1,25 +1,24 @@
-# Ontology TS CLI
+# Ontology TS Test
 
 ## Overview
 
-Ontology TS VM is Ontology Smart contract virtual machine written in Typescript. This VM is used in SmartX debugger and Test framework for Ontology Smart contracts.
+Ontology TS Test is Ontology Smart contract Test framework written in Typescript. This Test framework can be used directly through CLI interface or as embedded component in your project.
 
 
 ### What does it currently do
 
-* Execute NEOVM assembly (AVM)
-* Execution environment handling
-* Multiple Smart contract deployment
-* Custom blockchain state spoofing
-* Custom smart contract state spoofing
+* External compilation of C# and Python Smart Contracts
+* Deployment to Test | Main | Private Net
+* Invokation of Smart Contract method
+* Test framework methods for unit testing
 
 ### What is currently missing
 
-* Native contract call spoofing
+* Full CLI interface
 
 ## Usage
 
-Examples of usage can be found in tests forlder.
+Examples of usage can be found in test/demoToken.ts
 
 ## Installation
 
@@ -34,7 +33,7 @@ Execute these commands in the project's root directory:
 
 #### Download
 ```
-git clone 'https://github.com/OntologyCommunityDevelopers/ontology-ts-vm.git'
+git clone 'https://github.com/OntologyCommunityDevelopers/ontology-ts-test.git'
 cd ontology-ts-vm
 ```
 
@@ -61,6 +60,14 @@ npm run build:prod
 ````
 
 You will get the packaged code under '/lib'
+
+#### CLI interface
+
+````
+npm install -g
+````
+
+You will be able to call 'ontology-test-cli' command directly. Use option -h for further help.
 
 ## Built With
 

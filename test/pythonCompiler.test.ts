@@ -1,4 +1,4 @@
-import '../httpsFix';
+import './httpsFix';
 
 import { compile, loadContract } from '../src/index';
 
