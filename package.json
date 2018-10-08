@@ -12,7 +12,8 @@
     "lint": "tslint --project ./",
     "copy-cli": "copyfiles -f ./src/cli/ontology-test-cli.js ./lib",
     "build:dev": "cross-env NODE_ENV=development webpack --mode development --display-error-details --progress --color",
-    "build:prod": "cross-env NODE_ENV=production webpack --mode production --progress --color"
+    "build:prod": "cross-env NODE_ENV=production webpack --mode production --progress --color",
+    "preinstall": "npm run copy-cli"
   },
   "jest": {
     "moduleFileExtensions": [

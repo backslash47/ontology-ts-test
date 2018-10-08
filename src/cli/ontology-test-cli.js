@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+require('babel-polyfill');
 var program = require('commander');
 var https = require('https');
 var cli = require('./index');
