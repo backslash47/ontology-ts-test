@@ -2,6 +2,7 @@
 
 require('babel-polyfill');
 var program = require('commander');
+// var jest = require('jest-cli');
 var https = require('https');
 var cli = require('./index');
 
@@ -65,12 +66,14 @@ program
     console.log('templating: ', file);
   });
 
-program
-  .command('test <file>')
-  .description('Run smart contract test')
-  .action(function(file) {
-    console.log('testing: ', file);
-  });
+// program
+//   .command('test <file>')
+//   .description('Run smart contract test')
+//   .action(function(file) {
+//     console.log('Testing ', file);
+
+//     return jest.runCLI({ testRegex: file, _: [file] }, [__dirname]);
+//   });
 
 program
   .command('invoke')

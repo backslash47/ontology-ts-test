@@ -1,6 +1,7 @@
 import fetch from 'cross-fetch';
 import { Compiler, CompilerError } from './types';
 
+// tslint:disable:quotemark
 export class CsCompiler implements Compiler {
   url: string;
   constructor(url: string = 'https://smartxcompiler.ont.io/api/v1.0/csharp/compile') {
@@ -24,11 +25,15 @@ export class CsCompiler implements Compiler {
     }
 
     let avm: string = json.avm;
-    const abi: string = json.abi;
+    let abi: string = json.abi;
 
-    // tslint:disable-next-line:quotemark
     if (avm.startsWith("b'")) {
-      avm = avm.substr(2, avm.length - 1);
+      avm = avm.substring(2, avm.lastIndexOf("'"));
+    }
+
+    if (abi.startsWith("b'")) {
+      abi = abi.substring(2, abi.lastIndexOf("'"));
+      abi = abi.replace(/\\n/g, '\n');
     }
 
     return {

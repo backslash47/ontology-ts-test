@@ -12,7 +12,7 @@ export interface Client {
 
 export interface Account {
   privateKey: string;
-  address?: string;
+  address: string;
 }
 
 export interface Wallet {
