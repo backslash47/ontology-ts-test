@@ -70,7 +70,7 @@ export class Deployer {
     const response = await client.sendRawTransaction(w.getBytes(), false);
 
     if (response.error !== 0) {
-      throw new Error('Failed to deploy contract.');
+      throw new Error('Failed to deploy contract: ' + response.result);
     }
 
     await sleep(3000);

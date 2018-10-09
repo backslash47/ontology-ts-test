@@ -48,5 +48,5 @@ export function deployCli(input: string, options: CliDeployOptions) {
 
   const contract = loadCompiledContract(input);
 
-  deploy({ client, account, code: contract, ...rest });
+  return deploy({ client, account, code: contract, ...rest });
 }

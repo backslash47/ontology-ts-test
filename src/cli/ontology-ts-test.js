@@ -22,19 +22,40 @@ program
 program
   .command('deploy <file>')
   .description('Deploy compiled smart contract')
-  .option('--address', 'RPC node address')
-  .option('--privateKey', 'Private key in HEX format')
-  .option('--gasLimit', 'GAS Limit')
-  .option('--gasPrice', 'GAS Price')
+  .option('--address [address]', 'RPC node address')
+  .option('--privateKey <privateKey>', 'Private key in HEX format')
+  .option('--gasLimit [gasLimit]', 'GAS Limit')
+  .option('--gasPrice [gasPrice]', 'GAS Price')
   .option('--needStorage', 'True if smart contract needs storage')
-  .option('--name')
-  .option('--version')
-  .option('--author')
-  .option('--email')
-  .option('--description')
+  .option('--contractName [contractName]')
+  .option('--contractVersion [contractVersion]')
+  .option('--contractAuthor [contractAuthor]')
+  .option('--contractEmail [contractEmail]')
+  .option('--contractDescription [contractDescription]')
   .action(function(file, options) {
-    console.log('deploying: ', file);
-    cli.deployCli(file, options);
+    if (options.privateKey === undefined) {
+      console.log('--privateKey option is required.');
+      return;
+    }
+
+    console.log('Deploying ', file);
+
+    const deployOptions = {
+      address: options.address,
+      privateKey: options.privateKey,
+      gasLimit: options.gasLimit,
+      gasPrice: options.gasPrice,
+      needStorage: options.needStorage,
+      name: options.contractName,
+      version: options.contractVersion,
+      author: options.contractAuthor,
+      email: options.contractEmail,
+      description: options.contractDescription
+    };
+    return cli
+      .deployCli(file, deployOptions)
+      .then((_) => console.log('Deployment complete'))
+      .catch((err) => console.log(err.message));
   });
 
 program
