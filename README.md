@@ -18,7 +18,8 @@ Ontology TS Test is Ontology Smart contract Test framework written in Typescript
 
 ## Usage
 
-Examples of usage can be found in test/demoToken.ts
+Examples of in code usage can be found at https://github.com/OntologyCommunityDevelopers/ontology-ts-test-demo
+For direct use, see CLI interface.
 
 ## Installation
 
