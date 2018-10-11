@@ -1,7 +1,7 @@
 import * as Long from 'long';
 import { APPCALL, PACK } from './common/opCode';
 import { ProgramBuilder } from './common/program';
-import { sleep } from './common/utils';
+import { sleep, reverseBuffer } from './common/utils';
 import { InvokeCode } from './core/payload/invokeCode';
 import { Invoke, Transaction } from './core/transaction';
 import RpcClient from './network/rpcClient';
@@ -34,6 +34,7 @@ export class Invoker {
     contractHash,
     gasPrice = '500',
     gasLimit = '20000000',
+    preExec,
     processCallback
   }: InvokerOptions) {
     const builder: ProgramBuilder = new ProgramBuilder();
@@ -43,7 +44,7 @@ export class Invoker {
     parameters.reverse().forEach((parameter) => this.pushParam(parameter, builder));
 
     builder.writeOpCode(APPCALL);
-    builder.writeBytes(new Buffer(contractHash, 'hex'));
+    builder.writeBytes(reverseBuffer(new Buffer(contractHash, 'hex')));
 
     const code = builder.getProgram();
     const payload = new InvokeCode(code);
@@ -64,7 +65,11 @@ export class Invoker {
     const w = new Writer();
     tx.serialize(w);
 
-    const response = await client.sendRawTransaction(w.getBytes(), false);
+    const response = await client.sendRawTransaction(w.getBytes(), preExec);
+
+    if (preExec) {
+      return response;
+    }
 
     if (response.error !== 0) {
       throw new Error('Failed to invoke contract: ' + response.result);

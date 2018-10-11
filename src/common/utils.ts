@@ -96,3 +96,8 @@ export function reverseBuffer(src: Buffer) {
 
   return buffer;
 }
+
+export function hex2num(str: string) {
+  const buffer = new Buffer(str, 'hex');
+  return bigIntFromBytes(buffer).toJSNumber();
+}
