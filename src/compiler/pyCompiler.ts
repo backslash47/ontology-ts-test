@@ -1,5 +1,7 @@
 import fetch from 'cross-fetch';
+import { Address } from '../common/address';
 import { Compiler, CompilerError } from './types';
+import { reverseBuffer } from '../common/utils';
 
 export class PyCompiler implements Compiler {
   url: string;
@@ -30,13 +32,16 @@ export class PyCompiler implements Compiler {
 
     // tslint:disable-next-line:quotemark
     if (avm.startsWith("b'")) {
-      avm = avm.substr(2, avm.length - 1);
+      // tslint:disable-next-line:quotemark
+      avm = avm.substring(2, avm.lastIndexOf("'"));
     }
+
+    const hash = reverseBuffer(Address.parseFromVmCode(new Buffer(avm, 'hex')).toArray()).toString('hex');
 
     return {
       avm: new Buffer(avm, 'hex'),
       abi: new Buffer(abi),
-      hash: JSON.parse(abi).hash
+      hash
     };
   }
 }

@@ -85,3 +85,14 @@ export function loadCompiledContract(path: string) {
   const codeString = codeBuffer.toString();
   return new Buffer(codeString, 'hex');
 }
+
+export function reverseBuffer(src: Buffer) {
+  const buffer = Buffer.allocUnsafe(src.length);
+
+  for (let i = 0, j = src.length - 1; i <= j; ++i, --j) {
+    buffer[i] = src[j];
+    buffer[j] = src[i];
+  }
+
+  return buffer;
+}
