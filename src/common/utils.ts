@@ -86,6 +86,10 @@ export function loadCompiledContract(path: string) {
   return new Buffer(codeString, 'hex');
 }
 
+export function loadOptionsFile(path: string) {
+  return readFileSync(path).toString();
+}
+
 export function reverseBuffer(src: Buffer) {
   const buffer = Buffer.allocUnsafe(src.length);
 

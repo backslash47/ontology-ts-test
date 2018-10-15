@@ -2,7 +2,6 @@
 
 require('babel-polyfill');
 var program = require('commander');
-// var jest = require('jest-cli');
 var https = require('https');
 var cli = require('./index');
 
@@ -60,29 +59,60 @@ program
   });
 
 program
-  .command('template <file>')
-  .description('Create template test file')
-  .action(function(file) {
-    console.log('templating: ', file);
-  });
-
-// program
-//   .command('test <file>')
-//   .description('Run smart contract test')
-//   .action(function(file) {
-//     console.log('Testing ', file);
-
-//     return jest.runCLI({ testRegex: file, _: [file] }, [__dirname]);
-//   });
-
-program
   .command('invoke')
   .description('Invoke smart contract method')
-  .option('--contract', 'Contract address')
-  .option('--method', 'Contract method')
-  .option('--preexec', 'Invoke read-only method')
+  .option('--address [address]', 'RPC node address')
+  .option('--privateKey [privateKey]', 'Private key in HEX format')
+  .option('--gasLimit [gasLimit]', 'GAS Limit')
+  .option('--gasPrice [gasPrice]', 'GAS Price')
+  .option('--contract <contract>', 'Contract address')
+  .option('--method <method>', 'Contract method')
+  .option('--parameters [parameters]', 'Contract parameters')
+  .option('--preExec', 'Invoke read-only method')
+  .action(function(options) {
+    if (options.privateKey === undefined && options.preExec !== true) {
+      console.log('--privateKey option or --preExec option is required.');
+      return;
+    }
+
+    if (options.contract === undefined) {
+      console.log('--contract option is required.');
+      return;
+    }
+
+    if (options.method === undefined) {
+      console.log('--method option is required.');
+      return;
+    }
+
+    console.log('Invoking');
+
+    const invokeOptions = {
+      address: options.address,
+      privateKey: options.privateKey,
+      gasLimit: options.gasLimit,
+      gasPrice: options.gasPrice,
+      preExec: options.preExec,
+      contract: options.contract,
+      method: options.method,
+      parameters: options.parameters !== undefined ? JSON.parse(options.parameters) : undefined
+    };
+    return cli
+      .invokeCli(invokeOptions)
+      .then((result) => console.log(JSON.stringify(result)))
+      .catch((err) => console.log(err.message));
+  });
+
+program
+  .command('invokeFile <file>')
+  .description('Invoke smart contract method defined in config file')
   .action(function(file) {
-    console.log('invoking: ', file);
+    console.log('Invoking');
+
+    return cli
+      .invokeFileCli(file)
+      .then((result) => console.log(JSON.stringify(result)))
+      .catch((err) => console.log(err.message));
   });
 
 program.parse(process.argv);

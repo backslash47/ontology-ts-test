@@ -1,14 +1,14 @@
 import * as Long from 'long';
 import { APPCALL, PACK } from './common/opCode';
 import { ProgramBuilder } from './common/program';
-import { sleep, reverseBuffer } from './common/utils';
+import { reverseBuffer, sleep } from './common/utils';
 import { InvokeCode } from './core/payload/invokeCode';
 import { Invoke, Transaction } from './core/transaction';
 import RpcClient from './network/rpcClient';
 import { Writer } from './utils/writer';
 
 export interface Invoke {
-  contractHash: string;
+  contract: string;
   method: string;
   parameters?: any[];
 }
@@ -31,7 +31,7 @@ export class Invoker {
   async invoke({
     method,
     parameters = [],
-    contractHash,
+    contract,
     gasPrice = '500',
     gasLimit = '20000000',
     preExec,
@@ -44,7 +44,7 @@ export class Invoker {
     parameters.reverse().forEach((parameter) => this.pushParam(parameter, builder));
 
     builder.writeOpCode(APPCALL);
-    builder.writeBytes(reverseBuffer(new Buffer(contractHash, 'hex')));
+    builder.writeBytes(reverseBuffer(new Buffer(contract, 'hex')));
 
     const code = builder.getProgram();
     const payload = new InvokeCode(code);
@@ -91,6 +91,7 @@ export class Invoker {
     } else if (parameter instanceof Map) {
       // const mapBytes = getMapBytes(parameter);
       // builder.pushBytes(mapBytes);
+      throw new Error('Unsupported param type');
     } else if (Array.isArray(parameter)) {
       this.pushStruct(parameter, builder);
     } else {

@@ -1,0 +1,15 @@
+{
+    "contract": "bd76a5917e0444d4b615b87c5912362164676dc7",
+    "method": "Add",
+    "privateKey": "75de8489fcb2dcaf2ef3cd607feffde18789de7da129b5e97c81e001793cb7cf",
+    "parameters": [
+        {
+            "type": "Number",
+            "value": 4
+        },
+        {
+            "type": "Number",
+            "value": 3
+        }
+    ]
+}
