@@ -1,7 +1,7 @@
 import fetch from 'cross-fetch';
 import { Address } from '../common/address';
-import { Compiler, CompilerError } from './types';
 import { reverseBuffer } from '../common/utils';
+import { Compiler, CompilerError } from './types';
 
 export class PyCompiler implements Compiler {
   url: string;

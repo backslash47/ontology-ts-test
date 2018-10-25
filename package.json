@@ -1,6 +1,6 @@
 {
   "name": "ontology-ts-test",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "",
   "bin": {
     "ontology-ts-test": "./lib/ontology-ts-test.js"
@@ -43,9 +43,7 @@
   "homepage": "https://github.com/OntologyCommunityDevelopers/ontology-ts-test",
   "devDependencies": {
     "@types/bs58": "^3.0.30",
-    "@types/bytebuffer": "~5",
     "@types/jest": "^23.3.1",
-    "@types/long": "~4",
     "@types/node": "^8.5.2",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
@@ -68,6 +66,8 @@
     "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
+    "@types/bytebuffer": "~5",
+    "@types/long": "~4",
     "big-integer": "^1.6.36",
     "bs58": "^4.0.1",
     "bytebuffer": "~5",
