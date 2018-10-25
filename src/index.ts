@@ -44,5 +44,5 @@ export { CompilerType } from './compiler';
 export { loadContract, loadCompiledContract } from './common/utils';
 export { loadWallet, createWallet, createAccount } from './wallet';
 export { compileCli, deployCli, invokeCli, invokeFileCli } from './cli/cli';
-export { hex2num } from './common/utils';
+export { hex2num, reverseBuffer } from './common/utils';
 export { Address } from './common/address';
