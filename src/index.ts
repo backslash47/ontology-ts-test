@@ -48,3 +48,6 @@ export { hex2num, reverseBuffer } from './common/utils';
 export { Address } from './common/address';
 export { PrivateKey } from './crypto/privateKey';
 export { PublicKey } from './crypto/publicKey';
+export { CurveLabel } from './crypto/curveLabel';
+export { KeyType } from './crypto/keyType';
+export { Key, KeyParameters } from './crypto/key';
