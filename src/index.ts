@@ -2,7 +2,7 @@ import { Address } from './common/address';
 import { createCompiler } from './compiler';
 import { Deployer } from './deployer';
 import { Invoker } from './invoker';
-import { Client, CompileOptions, DeployOptions, InitClientOptions, InvokeOptions } from './types';
+import { Client, CompileOptions, DeployOptions, InitClientOptions, InvokeOptions, IsDeployedOptions } from './types';
 import { signTransaction } from './wallet';
 
 export function initClient({ rpcAddress = 'http://polaris1.ont.io:20336' }: InitClientOptions): Client {
@@ -25,6 +25,11 @@ export function deploy({ client, account, ...rest }: DeployOptions) {
       signTransaction(tx, account);
     }
   });
+}
+
+export function isDeployed({ client, scriptHash }: IsDeployedOptions) {
+  const deployer = new Deployer(client.rpcAddress);
+  return deployer.isDeployed(new Address(scriptHash));
 }
 
 export function invoke({ client, account, ...rest }: InvokeOptions) {

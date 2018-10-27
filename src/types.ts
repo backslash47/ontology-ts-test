@@ -30,6 +30,11 @@ export interface DeployOptions extends DeployerOptions {
   account: Account;
 }
 
+export interface IsDeployedOptions {
+  client: Client;
+  scriptHash: string;
+}
+
 export interface InvokeOptions extends InvokerOptions {
   client: Client;
   account?: Account;

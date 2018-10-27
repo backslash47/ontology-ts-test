@@ -1,4 +1,5 @@
 import * as Long from 'long';
+import { Address } from './common/address';
 import { sleep } from './common/utils';
 import { DeployCode } from './core/payload/deployCode';
 import { Deploy, Transaction } from './core/transaction';
@@ -27,6 +28,17 @@ export class Deployer {
 
   constructor(rpcAddress: string) {
     this.rpcAddress = rpcAddress;
+  }
+
+  async isDeployed(address: Address) {
+    const client = new RpcClient(this.rpcAddress);
+
+    const response = await client.getContract(address.toArray().toString('hex'));
+    if (response.result === 'unknow contract' || response.result === 'unknow contracts') {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   async deploy({
