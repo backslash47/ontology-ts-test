@@ -20,6 +20,7 @@ export interface CompileOptions {
 export interface DeployOptions extends DeployerOptions {
   client: Client;
   account: Account;
+  password?: string;
 }
 
 export interface IsDeployedOptions {
@@ -30,4 +31,5 @@ export interface IsDeployedOptions {
 export interface InvokeOptions extends InvokerOptions {
   client: Client;
   account?: Account;
+  password?: string;
 }

@@ -16,13 +16,13 @@ export function compile({ code, type, url }: CompileOptions) {
   return compiler.compile(code);
 }
 
-export function deploy({ client, account, ...rest }: DeployOptions) {
+export function deploy({ client, account, password, ...rest }: DeployOptions) {
   const deployer = new Deployer(client.rpcAddress);
   return deployer.deploy({
     ...rest,
     processCallback: async (tx) => {
       tx.setPayer(account.address);
-      await signTransaction(tx, account, '');
+      await signTransaction(tx, account, password !== undefined ? password : '');
     }
   });
 }
@@ -32,14 +32,14 @@ export function isDeployed({ client, scriptHash }: IsDeployedOptions) {
   return deployer.isDeployed(new Address(scriptHash));
 }
 
-export function invoke({ client, account, ...rest }: InvokeOptions) {
+export function invoke({ client, account, password, ...rest }: InvokeOptions) {
   const invoker = new Invoker(client.rpcAddress);
   return invoker.invoke({
     ...rest,
     processCallback: async (tx) => {
       if (account !== undefined) {
         tx.setPayer(account.address);
-        await signTransaction(tx, account, '');
+        await signTransaction(tx, account, password !== undefined ? password : '');
       }
     }
   });
