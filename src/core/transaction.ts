@@ -1,10 +1,7 @@
 import { createHash, randomBytes } from 'crypto';
 import * as Long from 'long';
-import { Address } from '../common/address';
+import { Address, Hash, Reader, Writer } from 'ontology-ts-crypto';
 import { Uint256 } from '../common/uint256';
-import { sha256 } from '../common/utils';
-import { Reader } from '../utils/reader';
-import { Writer } from '../utils/writer';
 import { DeployCode } from './payload/deployCode';
 import { InvokeCode } from './payload/invokeCode';
 
@@ -98,7 +95,7 @@ export class Transaction {
     this.payload = payload;
     this.sigs = sigs;
 
-    this.hash = Uint256.parseFromBytes(sha256(this.serializeUnsigned()));
+    this.hash = Uint256.parseFromBytes(Hash.sha256(this.serializeUnsigned()));
   }
 
   getVersion() {
@@ -144,7 +141,7 @@ export class Transaction {
     const addrs: Address[] = [];
 
     for (const sig of this.sigs) {
-      addrs.push(Address.parseFromVmCode(sig.getVerify()));
+      addrs.push(Address.fromVmCode(sig.getVerify()));
     }
 
     return addrs;
@@ -222,9 +219,7 @@ export class Transaction {
     this.nonce = r.readUInt32();
     this.gasPrice = r.readUInt64();
     this.gasLimit = r.readUInt64();
-
-    this.payer = new Address();
-    this.payer.deserialize(r);
+    this.payer = Address.deserialize(r.readBytes(20));
 
     if (this.txType === Invoke) {
       const pl = new InvokeCode();

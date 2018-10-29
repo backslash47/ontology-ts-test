@@ -17,7 +17,7 @@
  */
 
 import fetch from 'cross-fetch';
-import { Address } from '../common/address';
+import { Address } from 'ontology-ts-crypto';
 
 /**
  * Wrapper class for RPC apis.

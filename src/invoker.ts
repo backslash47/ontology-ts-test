@@ -1,11 +1,9 @@
 import * as Long from 'long';
-import { APPCALL, PACK } from './common/opCode';
-import { ProgramBuilder } from './common/program';
+import { OpCode, ProgramBuilder, Writer } from 'ontology-ts-crypto';
 import { reverseBuffer, sleep } from './common/utils';
 import { InvokeCode } from './core/payload/invokeCode';
 import { Invoke, Transaction } from './core/transaction';
 import RpcClient from './network/rpcClient';
-import { Writer } from './utils/writer';
 
 export interface Invoke {
   contract: string;
@@ -18,7 +16,7 @@ export interface InvokerOptions extends Invoke {
   gasPrice?: string;
   preExec?: boolean;
 
-  processCallback?: (transaction: Transaction) => void;
+  processCallback?: (transaction: Transaction) => Promise<void> | void;
 }
 
 export class Invoker {
@@ -43,7 +41,7 @@ export class Invoker {
 
     parameters.reverse().forEach((parameter) => this.pushParam(parameter, builder));
 
-    builder.writeOpCode(APPCALL);
+    builder.writeOpCode(OpCode.APPCALL);
     builder.writeBytes(reverseBuffer(new Buffer(contract, 'hex')));
 
     const code = builder.getProgram();
@@ -57,7 +55,10 @@ export class Invoker {
     });
 
     if (processCallback !== undefined) {
-      processCallback(tx);
+      const result = processCallback(tx);
+      if (result instanceof Promise) {
+        await result;
+      }
     }
 
     const client = new RpcClient(this.rpcAddress);
@@ -103,6 +104,6 @@ export class Invoker {
     parameters.reverse().forEach((parameter) => this.pushParam(parameter, builder));
 
     builder.pushNum(parameters.length);
-    builder.writeOpCode(PACK);
+    builder.writeOpCode(OpCode.PACK);
   }
 }

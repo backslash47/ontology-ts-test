@@ -1,5 +1,4 @@
-import { Reader } from '../../utils/reader';
-import { Writer } from '../../utils/writer';
+import { Reader, Writer } from 'ontology-ts-crypto';
 
 export interface DeployCodeOptions {
   code: Buffer;

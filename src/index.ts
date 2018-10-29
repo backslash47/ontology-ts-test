@@ -1,4 +1,4 @@
-import { Address } from './common/address';
+import { Address } from 'ontology-ts-crypto';
 import { createCompiler } from './compiler';
 import { Deployer } from './deployer';
 import { Invoker } from './invoker';
@@ -20,9 +20,9 @@ export function deploy({ client, account, ...rest }: DeployOptions) {
   const deployer = new Deployer(client.rpcAddress);
   return deployer.deploy({
     ...rest,
-    processCallback: (tx) => {
-      tx.setPayer(new Address(account.address));
-      signTransaction(tx, account);
+    processCallback: async (tx) => {
+      tx.setPayer(account.address);
+      await signTransaction(tx, account, '');
     }
   });
 }
@@ -36,10 +36,10 @@ export function invoke({ client, account, ...rest }: InvokeOptions) {
   const invoker = new Invoker(client.rpcAddress);
   return invoker.invoke({
     ...rest,
-    processCallback: (tx) => {
+    processCallback: async (tx) => {
       if (account !== undefined) {
-        tx.setPayer(new Address(account.address));
-        signTransaction(tx, account);
+        tx.setPayer(account.address);
+        await signTransaction(tx, account, '');
       }
     }
   });
@@ -50,9 +50,3 @@ export { loadContract, loadCompiledContract } from './common/utils';
 export { loadWallet, createWallet, createAccount } from './wallet';
 export { compileCli, deployCli, invokeCli, invokeFileCli } from './cli/cli';
 export { hex2num, reverseBuffer } from './common/utils';
-export { Address } from './common/address';
-export { PrivateKey } from './crypto/privateKey';
-export { PublicKey } from './crypto/publicKey';
-export { CurveLabel } from './crypto/curveLabel';
-export { KeyType } from './crypto/keyType';
-export { Key, KeyParameters } from './crypto/key';

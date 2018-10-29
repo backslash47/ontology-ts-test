@@ -1,9 +1,9 @@
 import { writeFileSync } from 'fs';
+import { Account } from 'ontology-ts-crypto';
 import { compile, CompilerType, deploy, initClient, invoke, loadContract } from '../';
 import { loadCompiledContract, loadOptionsFile } from '../common/utils';
 import { Deployment } from '../deployer';
 import { Invoke } from '../invoker';
-import { Account } from '../types';
 import { createAccount } from '../wallet';
 
 export function compileCli(input: string, outputAvm?: string, outputAbi?: string): Promise<void> {
@@ -72,7 +72,7 @@ export function deployCli(input: string, options: CliDeployOptions) {
   const { privateKey, address, ...rest } = options;
 
   const client = initClient({ rpcAddress: address });
-  const account: Account = createAccount(privateKey);
+  const account = createAccount(privateKey);
 
   const contract = loadCompiledContract(input);
 

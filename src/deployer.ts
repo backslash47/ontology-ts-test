@@ -1,10 +1,9 @@
 import * as Long from 'long';
-import { Address } from './common/address';
+import { Address, Writer } from 'ontology-ts-crypto';
 import { sleep } from './common/utils';
 import { DeployCode } from './core/payload/deployCode';
 import { Deploy, Transaction } from './core/transaction';
 import RpcClient from './network/rpcClient';
-import { Writer } from './utils/writer';
 
 export interface Deployment {
   code: Buffer;
@@ -20,7 +19,7 @@ export interface DeployerOptions extends Deployment {
   gasLimit?: string;
   gasPrice?: string;
 
-  processCallback?: (transaction: Transaction) => void;
+  processCallback?: (transaction: Transaction) => Promise<void> | void;
 }
 
 export class Deployer {
@@ -71,7 +70,10 @@ export class Deployer {
     });
 
     if (processCallback !== undefined) {
-      processCallback(tx);
+      const result = processCallback(tx);
+      if (result instanceof Promise) {
+        await result;
+      }
     }
 
     const client = new RpcClient(this.rpcAddress);

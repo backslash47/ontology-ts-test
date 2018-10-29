@@ -1,6 +1,6 @@
 {
   "name": "ontology-ts-test",
-  "version": "0.1.15",
+  "version": "0.2.0",
   "description": "",
   "bin": {
     "ontology-ts-test": "./lib/ontology-ts-test.js"
@@ -44,13 +44,14 @@
   "devDependencies": {
     "@types/bs58": "^3.0.30",
     "@types/jest": "^23.3.1",
-    "@types/node": "^8.5.2",
+    "@types/node": "^10.0.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-3": "^6.24.1",
     "clean-webpack-plugin": "^0.1.19",
+    "copyfiles": "^2.1.0",
     "cross-env": "^5.2.0",
     "jest": "^23.4.2",
     "jest-cli": "^23.6.0",
@@ -66,16 +67,10 @@
     "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
-    "@types/bytebuffer": "~5",
     "@types/long": "~4",
-    "big-integer": "^1.6.36",
-    "bs58": "^4.0.1",
-    "bytebuffer": "~5",
     "commander": "^2.18.0",
-    "copyfiles": "^2.1.0",
     "cross-fetch": "^2.2.2",
-    "elliptic": "^6.4.1",
-    "js-sha3": "^0.8.0",
-    "long": "~4"
+    "long": "~4",
+    "ontology-ts-crypto": "^0.1.4"
   }
 }

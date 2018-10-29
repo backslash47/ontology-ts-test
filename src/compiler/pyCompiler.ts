@@ -1,5 +1,5 @@
 import fetch from 'cross-fetch';
-import { Address } from '../common/address';
+import { Address } from 'ontology-ts-crypto';
 import { reverseBuffer } from '../common/utils';
 import { Compiler, CompilerError } from './types';
 
@@ -36,7 +36,7 @@ export class PyCompiler implements Compiler {
       avm = avm.substring(2, avm.lastIndexOf("'"));
     }
 
-    const hash = reverseBuffer(Address.parseFromVmCode(new Buffer(avm, 'hex')).toArray()).toString('hex');
+    const hash = reverseBuffer(Address.fromVmCode(new Buffer(avm, 'hex')).toArray()).toString('hex');
 
     return {
       avm: new Buffer(avm, 'hex'),

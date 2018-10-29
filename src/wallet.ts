@@ -1,40 +1,29 @@
-import { Address } from './common/address';
-import { programFromParams, programFromPubKey } from './common/program';
-import { sha256 } from './common/utils';
+import { randomBytes } from 'crypto';
+import { Account, Hash, PrivateKey, programFromParams, programFromPubKey, Wallet } from 'ontology-ts-crypto';
 import { RawSig, Transaction } from './core/transaction';
-import { PrivateKey } from './crypto/privateKey';
-import { Account, Wallet } from './types';
 
 export function loadWallet(path: string): Wallet {
   throw new Error('Unsupported');
 }
 
 export function createWallet(accounts: Account[]): Wallet {
-  return {
-    accounts
-  };
+  const wallet = Wallet.create();
+
+  accounts.forEach((account) => wallet.addAccount(account));
+  return wallet;
 }
 
 export function createAccount(privateKey: string): Account {
-  const sk = new PrivateKey(privateKey);
-  const pk = sk.getPublicKey();
-  const address = Address.fromPubKey(pk)
-    .toArray()
-    .toString('hex');
-
-  return {
-    address,
-    privateKey
-  };
+  return Account.create(randomBytes(4).toString('hex'), PrivateKey.deserialize(new Buffer(privateKey, 'hex')), '');
 }
 
-export function signTransaction(tx: Transaction, account: Account) {
+export async function signTransaction(tx: Transaction, account: Account, password: string) {
   const bytes = tx.serializeUnsigned();
-  const hash = sha256(sha256(bytes));
+  const hash = Hash.sha256(Hash.sha256(bytes));
 
-  const privateKey = new PrivateKey(account.privateKey);
+  const privateKey = await account.decryptKey(password);
   const publicKey = privateKey.getPublicKey();
-  const signature = privateKey.sign(hash);
+  const signature = await privateKey.sign(hash);
 
   const invokationSript = programFromParams([signature.serialize()]);
   const verificationScript = programFromPubKey(publicKey);

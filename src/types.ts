@@ -1,3 +1,4 @@
+import { Account } from 'ontology-ts-crypto';
 import { CompilerType } from './compiler/types';
 import { DeployerOptions } from './deployer';
 import { InvokerOptions } from './invoker';
@@ -8,15 +9,6 @@ export interface InitClientOptions {
 
 export interface Client {
   rpcAddress: string;
-}
-
-export interface Account {
-  privateKey: string;
-  address: string;
-}
-
-export interface Wallet {
-  accounts: Account[];
 }
 
 export interface CompileOptions {
