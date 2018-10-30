@@ -15,7 +15,7 @@ export interface InvokerOptions extends Invoke {
   gasLimit?: string;
   gasPrice?: string;
   preExec?: boolean;
-  wait: boolean;
+  wait?: boolean;
 
   processCallback?: (transaction: Transaction) => Promise<void> | void;
 }
