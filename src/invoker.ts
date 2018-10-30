@@ -15,6 +15,7 @@ export interface InvokerOptions extends Invoke {
   gasLimit?: string;
   gasPrice?: string;
   preExec?: boolean;
+  wait: boolean;
 
   processCallback?: (transaction: Transaction) => Promise<void> | void;
 }
@@ -33,7 +34,8 @@ export class Invoker {
     gasPrice = '500',
     gasLimit = '20000000',
     preExec,
-    processCallback
+    processCallback,
+    wait = true
   }: InvokerOptions) {
     const builder: ProgramBuilder = new ProgramBuilder();
 
@@ -68,12 +70,12 @@ export class Invoker {
 
     const response = await client.sendRawTransaction(w.getBytes(), preExec);
 
-    if (preExec) {
-      return response;
-    }
-
     if (response.error !== 0) {
       throw new Error('Failed to invoke contract: ' + response.result);
+    }
+
+    if (preExec || !wait) {
+      return response;
     }
 
     await sleep(3000);
