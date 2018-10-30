@@ -2,7 +2,7 @@ import * as Long from 'long';
 import { OpCode, ProgramBuilder, Writer } from 'ontology-ts-crypto';
 import { reverseBuffer, sleep } from './common/utils';
 import { InvokeCode } from './core/payload/invokeCode';
-import { Invoke, Transaction } from './core/transaction';
+import { Invoke as InvokeEnum, Transaction } from './core/transaction';
 import RpcClient from './network/rpcClient';
 
 export interface Invoke {
@@ -48,7 +48,7 @@ export class Invoker {
     const payload = new InvokeCode(code);
 
     const tx = new Transaction({
-      txType: Invoke,
+      txType: InvokeEnum,
       payload,
       gasPrice: Long.fromString(gasPrice),
       gasLimit: Long.fromString(gasLimit)
