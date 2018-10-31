@@ -1,9 +1,11 @@
 import { randomBytes } from 'crypto';
+import * as fs from 'fs';
 import { Account, Hash, PrivateKey, programFromParams, programFromPubKey, Wallet } from 'ontology-ts-crypto';
 import { RawSig, Transaction } from './core/transaction';
 
-export function loadWallet(path: string): Wallet {
-  throw new Error('Unsupported');
+export function loadWallet(walletPath: string): Wallet {
+  const f = fs.readFileSync(walletPath, 'utf8');
+  return Wallet.deserializeJson(f);
 }
 
 export function createWallet(accounts: Account[]): Wallet {
