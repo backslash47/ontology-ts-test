@@ -42,6 +42,7 @@
   },
   "homepage": "https://github.com/OntologyCommunityDevelopers/ontology-ts-test",
   "devDependencies": {
+    "merge": "^1.2.1",
     "@types/bs58": "^3.0.30",
     "@types/jest": "^23.3.1",
     "@types/node": "^10.0.0",
@@ -71,6 +72,6 @@
     "commander": "^2.18.0",
     "cross-fetch": "^2.2.2",
     "long": "~4",
-    "ontology-ts-crypto": "^0.1.12"
+    "ontology-ts-crypto": "^0.1.13"
   }
 }
