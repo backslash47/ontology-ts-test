@@ -22,7 +22,7 @@ import { Address } from 'ontology-ts-crypto';
 /**
  * Wrapper class for RPC apis.
  */
-export default class RpcClient {
+export class RpcClient {
   /**
    * Url of the blockchain node
    */

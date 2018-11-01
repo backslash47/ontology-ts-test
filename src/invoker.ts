@@ -3,7 +3,7 @@ import { OpCode, ProgramBuilder, Writer } from 'ontology-ts-crypto';
 import { reverseBuffer, sleep } from './common/utils';
 import { InvokeCode } from './core/payload/invokeCode';
 import { Invoke as InvokeEnum, Transaction } from './core/transaction';
-import RpcClient from './network/rpcClient';
+import { RpcClient } from './network/rpcClient';
 
 export interface Invoke {
   contract: string;

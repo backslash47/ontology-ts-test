@@ -3,7 +3,7 @@ import { Address, Writer } from 'ontology-ts-crypto';
 import { sleep } from './common/utils';
 import { DeployCode } from './core/payload/deployCode';
 import { Deploy, Transaction } from './core/transaction';
-import RpcClient from './network/rpcClient';
+import { RpcClient } from './network/rpcClient';
 
 export interface Deployment {
   code: Buffer;

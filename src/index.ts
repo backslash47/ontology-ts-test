@@ -50,3 +50,4 @@ export { loadContract, loadCompiledContract } from './common/utils';
 export { loadWallet, createWallet, createAccount } from './wallet';
 export { compileCli, deployCli, invokeCli, invokeFileCli } from './cli/cli';
 export { hex2num, reverseBuffer } from './common/utils';
+export { RpcClient } from './network/rpcClient';
