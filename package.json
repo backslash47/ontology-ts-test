@@ -1,6 +1,6 @@
 {
   "name": "ontology-ts-test",
-  "version": "0.2.18",
+  "version": "0.2.19",
   "description": "",
   "bin": {
     "ontology-ts-test": "./lib/ontology-ts-test.js"
@@ -69,6 +69,7 @@
   },
   "dependencies": {
     "@types/long": "~4",
+    "bignumber.js": "^8.0.1",
     "commander": "^2.18.0",
     "cross-fetch": "^2.2.2",
     "long": "~4",

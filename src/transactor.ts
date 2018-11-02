@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js';
 import * as Long from 'long';
 import { Address, OpCode, ProgramBuilder, Writer } from 'ontology-ts-crypto';
 import { Struct } from './common/struct';
@@ -39,9 +40,14 @@ export class Transactor {
     processCallback,
     wait = true
   }: TransactorTransferOptions) {
+    let amountBg = new BigNumber(amount);
+    if (asset === 'ong') {
+      amountBg = amountBg.shiftedBy(9);
+    }
+
     const builder: ProgramBuilder = new ProgramBuilder();
 
-    const tran = new Struct([sender, to, Long.fromString(amount)].reverse());
+    const tran = new Struct([sender, to, Long.fromString(amountBg.toString())].reverse());
     const parameters = [0, new Address(this.getContract(asset)), 'transfer', [tran]];
 
     parameters.reverse().forEach((parameter) => pushParam(parameter, builder));
@@ -92,9 +98,13 @@ export class Transactor {
     processCallback,
     wait = true
   }: TransactorTransferOptions) {
+    const amountBg = new BigNumber(amount).shiftedBy(9);
+
     const builder: ProgramBuilder = new ProgramBuilder();
 
-    const tran = new Struct([sender, new Address(this.getContract('ont')), to, Long.fromString(amount)].reverse());
+    const tran = new Struct(
+      [sender, new Address(this.getContract('ont')), to, Long.fromString(amountBg.toString())].reverse()
+    );
     const parameters = [0, new Address(this.getContract('ong')), 'transferFrom', tran];
 
     parameters.reverse().forEach((parameter) => pushParam(parameter, builder));
