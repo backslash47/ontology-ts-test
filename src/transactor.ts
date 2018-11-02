@@ -95,7 +95,7 @@ export class Transactor {
     const builder: ProgramBuilder = new ProgramBuilder();
 
     const tran = new Struct([sender, new Address(this.getContract('ont')), to, Long.fromString(amount)].reverse());
-    const parameters = [0, new Address(this.getContract('ong')), 'transferFrom', [tran]];
+    const parameters = [0, new Address(this.getContract('ong')), 'transferFrom', tran];
 
     parameters.reverse().forEach((parameter) => pushParam(parameter, builder));
     builder.writeOpCode(OpCode.SYSCALL);
