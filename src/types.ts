@@ -2,6 +2,7 @@ import { Account } from 'ontology-ts-crypto';
 import { CompilerType } from './compiler/types';
 import { DeployerOptions } from './deployer';
 import { InvokerOptions } from './invoker';
+import { TransactorTransferOptions } from './transactor';
 
 export interface InitClientOptions {
   rpcAddress?: string;
@@ -29,6 +30,12 @@ export interface IsDeployedOptions {
 }
 
 export interface InvokeOptions extends InvokerOptions {
+  client: Client;
+  account?: Account;
+  password?: string;
+}
+
+export interface TransferOptions extends TransactorTransferOptions {
   client: Client;
   account?: Account;
   password?: string;

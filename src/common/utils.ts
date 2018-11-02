@@ -1,5 +1,7 @@
 import { readFileSync } from 'fs';
-import { Serialize } from 'ontology-ts-crypto';
+import * as Long from 'long';
+import { Address, OpCode, ProgramBuilder, Serialize } from 'ontology-ts-crypto';
+import { Struct } from './struct';
 
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -33,4 +35,52 @@ export function reverseBuffer(src: Buffer) {
 export function hex2num(str: string) {
   const buffer = new Buffer(str, 'hex');
   return Serialize.bigIntFromBytes(buffer).toJSNumber();
+}
+
+export function pushParam(parameter: any, builder: ProgramBuilder) {
+  if (typeof parameter === 'number') {
+    builder.pushNum(parameter);
+  } else if (parameter instanceof Long) {
+    builder.pushNum(parameter);
+  } else if (typeof parameter === 'string') {
+    builder.pushBytes(new Buffer(parameter));
+  } else if (typeof parameter === 'boolean') {
+    builder.pushBool(parameter);
+  } else if (parameter instanceof Buffer) {
+    builder.pushBytes(parameter);
+  } else if (parameter instanceof Address) {
+    builder.pushBytes(parameter.toArray());
+  } else if (parameter instanceof Map) {
+    // const mapBytes = getMapBytes(parameter);
+    // builder.pushBytes(mapBytes);
+    throw new Error('Unsupported param type');
+  } else if (parameter instanceof Struct) {
+    pushStruct(parameter, builder);
+  } else if (Array.isArray(parameter)) {
+    pushArray(parameter, builder);
+  } else {
+    throw new Error('Unsupported param type');
+  }
+}
+
+export function pushArray(parameters: any[], builder: ProgramBuilder) {
+  parameters.reverse().forEach((parameter) => pushParam(parameter, builder));
+
+  builder.pushNum(parameters.length);
+  builder.writeOpCode(OpCode.PACK);
+}
+
+export function pushStruct(parameters: Struct, builder: ProgramBuilder) {
+  builder.pushNum(0);
+  builder.writeOpCode(OpCode.NEWSTRUCT);
+  builder.writeOpCode(OpCode.TOALTSTACK);
+
+  parameters.items.reverse().forEach((parameter) => {
+    pushParam(parameter, builder);
+    builder.writeOpCode(OpCode.DUPFROMALTSTACK);
+    builder.writeOpCode(OpCode.SWAP);
+    builder.writeOpCode(OpCode.APPEND);
+  });
+
+  builder.writeOpCode(OpCode.FROMALTSTACK);
 }

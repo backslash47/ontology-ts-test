@@ -2,7 +2,16 @@ import { Address } from 'ontology-ts-crypto';
 import { createCompiler } from './compiler';
 import { Deployer } from './deployer';
 import { Invoker } from './invoker';
-import { Client, CompileOptions, DeployOptions, InitClientOptions, InvokeOptions, IsDeployedOptions } from './types';
+import { Transactor } from './transactor';
+import {
+  Client,
+  CompileOptions,
+  DeployOptions,
+  InitClientOptions,
+  InvokeOptions,
+  IsDeployedOptions,
+  TransferOptions
+} from './types';
 import { signTransaction } from './wallet';
 
 export function initClient({ rpcAddress = 'http://polaris1.ont.io:20336' }: InitClientOptions): Client {
@@ -35,6 +44,32 @@ export function isDeployed({ client, scriptHash }: IsDeployedOptions) {
 export function invoke({ client, account, password, ...rest }: InvokeOptions) {
   const invoker = new Invoker(client.rpcAddress);
   return invoker.invoke({
+    ...rest,
+    processCallback: async (tx) => {
+      if (account !== undefined) {
+        tx.setPayer(account.address);
+        await signTransaction(tx, account, password !== undefined ? password : '');
+      }
+    }
+  });
+}
+
+export function transfer({ client, account, password, ...rest }: TransferOptions) {
+  const transactor = new Transactor(client.rpcAddress);
+  return transactor.transfer({
+    ...rest,
+    processCallback: async (tx) => {
+      if (account !== undefined) {
+        tx.setPayer(account.address);
+        await signTransaction(tx, account, password !== undefined ? password : '');
+      }
+    }
+  });
+}
+
+export function withdrawOng({ client, account, password, ...rest }: TransferOptions) {
+  const transactor = new Transactor(client.rpcAddress);
+  return transactor.withdrawOng({
     ...rest,
     processCallback: async (tx) => {
       if (account !== undefined) {

@@ -1,6 +1,6 @@
 import * as Long from 'long';
 import { OpCode, ProgramBuilder, Writer } from 'ontology-ts-crypto';
-import { reverseBuffer, sleep } from './common/utils';
+import { pushParam, reverseBuffer, sleep } from './common/utils';
 import { InvokeCode } from './core/payload/invokeCode';
 import { Invoke as InvokeEnum, Transaction } from './core/transaction';
 import { RpcClient } from './network/rpcClient';
@@ -41,7 +41,7 @@ export class Invoker {
 
     parameters = [method, parameters];
 
-    parameters.reverse().forEach((parameter) => this.pushParam(parameter, builder));
+    parameters.reverse().forEach((parameter) => pushParam(parameter, builder));
 
     builder.writeOpCode(OpCode.APPCALL);
     builder.writeBytes(reverseBuffer(new Buffer(contract, 'hex')));
@@ -80,32 +80,5 @@ export class Invoker {
 
     await sleep(3000);
     return await client.getSmartCodeEvent(response.result);
-  }
-
-  pushParam(parameter: any, builder: ProgramBuilder) {
-    if (typeof parameter === 'number') {
-      builder.pushNum(parameter);
-    } else if (typeof parameter === 'string') {
-      builder.pushBytes(new Buffer(parameter));
-    } else if (typeof parameter === 'boolean') {
-      builder.pushBool(parameter);
-    } else if (parameter instanceof Buffer) {
-      builder.pushBytes(parameter);
-    } else if (parameter instanceof Map) {
-      // const mapBytes = getMapBytes(parameter);
-      // builder.pushBytes(mapBytes);
-      throw new Error('Unsupported param type');
-    } else if (Array.isArray(parameter)) {
-      this.pushStruct(parameter, builder);
-    } else {
-      throw new Error('Unsupported param type');
-    }
-  }
-
-  pushStruct(parameters: any[], builder: ProgramBuilder) {
-    parameters.reverse().forEach((parameter) => this.pushParam(parameter, builder));
-
-    builder.pushNum(parameters.length);
-    builder.writeOpCode(OpCode.PACK);
   }
 }
