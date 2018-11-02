@@ -76,6 +76,16 @@ export class RpcClient {
   }
 
   /**
+   * Get the unbound ONG of some address.
+   * The result contains ONG.
+   * @param address Address
+   */
+  getUnboundOng(address: Address): Promise<any> {
+    const req = this.makeRequest('getunboundong', address.toBase58());
+    return this.sendRequest(req);
+  }
+
+  /**
    * Send ran transaction to blockchain.
    * @param data Hex encoded data.
    * @param preExec Decides if it is a pre-execute transaction.
