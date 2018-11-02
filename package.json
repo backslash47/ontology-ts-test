@@ -72,6 +72,6 @@
     "commander": "^2.18.0",
     "cross-fetch": "^2.2.2",
     "long": "~4",
-    "ontology-ts-crypto": "^0.1.18"
+    "ontology-ts-crypto": "^0.1.19"
   }
 }
