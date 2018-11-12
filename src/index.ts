@@ -1,5 +1,5 @@
 import { Address } from 'ontology-ts-crypto';
-import { createCompiler } from './compiler';
+import { CompilerOutput, createCompiler } from './compiler';
 import { Deployer } from './deployer';
 import { Invoker } from './invoker';
 import { Transactor } from './transactor';
@@ -20,7 +20,7 @@ export function initClient({ rpcAddress = 'http://polaris1.ont.io:20336' }: Init
   };
 }
 
-export function compile({ code, type, url }: CompileOptions) {
+export function compile({ code, type, url }: CompileOptions): Promise<CompilerOutput> {
   const compiler = createCompiler({ type, url });
   return compiler.compile(code);
 }
