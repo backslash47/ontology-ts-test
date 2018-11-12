@@ -6,6 +6,27 @@ export interface CompilerOutput {
   hash: string;
 }
 
+export interface Debug {
+  avm: {
+    name: string;
+    hash: string;
+  };
+
+  compiler: {
+    name: string;
+    version: string;
+  };
+
+  files: Array<{ id: string; url: string }>;
+
+  map: Array<{ start: number; end: number; file: number; method: string; line: number; file_line_no: number }>;
+  breakpoints: any[];
+}
+
+export interface FuncMap {
+  Functions: Array<{ Method: string; VarMap: { [key: string]: number } }>;
+}
+
 export class CompilerError extends Error {
   code: number;
 
