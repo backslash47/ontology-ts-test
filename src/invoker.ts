@@ -20,6 +20,20 @@ export interface InvokerOptions extends Invoke {
   processCallback?: (transaction: Transaction) => Promise<void> | void;
 }
 
+export function buildInvokePayload(contract: string, method: string, parameters: any[]) {
+  const builder: ProgramBuilder = new ProgramBuilder();
+
+  parameters = [method, parameters];
+
+  parameters.reverse().forEach((parameter) => pushParam(parameter, builder));
+
+  builder.writeOpCode(OpCode.APPCALL);
+  builder.writeBytes(reverseBuffer(new Buffer(contract, 'hex')));
+
+  const code = builder.getProgram();
+  return new InvokeCode(code);
+}
+
 export class Invoker {
   rpcAddress: string;
 
@@ -37,17 +51,7 @@ export class Invoker {
     processCallback,
     wait = true
   }: InvokerOptions) {
-    const builder: ProgramBuilder = new ProgramBuilder();
-
-    parameters = [method, parameters];
-
-    parameters.reverse().forEach((parameter) => pushParam(parameter, builder));
-
-    builder.writeOpCode(OpCode.APPCALL);
-    builder.writeBytes(reverseBuffer(new Buffer(contract, 'hex')));
-
-    const code = builder.getProgram();
-    const payload = new InvokeCode(code);
+    const payload = buildInvokePayload(contract, method, parameters);
 
     const tx = new Transaction({
       txType: InvokeEnum,
