@@ -31,7 +31,7 @@ export function buildInvokePayload(contract: string, method: string, parameters:
   builder.writeBytes(reverseBuffer(new Buffer(contract, 'hex')));
 
   const code = builder.getProgram();
-  return new InvokeCode(code);
+  return code;
 }
 
 export class Invoker {
@@ -51,7 +51,7 @@ export class Invoker {
     processCallback,
     wait = true
   }: InvokerOptions) {
-    const payload = buildInvokePayload(contract, method, parameters);
+    const payload = new InvokeCode(buildInvokePayload(contract, method, parameters));
 
     const tx = new Transaction({
       txType: InvokeEnum,
