@@ -1,5 +1,5 @@
 import fetch from 'cross-fetch';
-import { Compiler, CompilerError } from './types';
+import { Compiler, CompilerError, CompilerOutput } from './types';
 
 // tslint:disable:quotemark
 export class CsCompiler implements Compiler {
@@ -8,7 +8,7 @@ export class CsCompiler implements Compiler {
     this.url = url;
   }
 
-  async compile(code: Buffer) {
+  async compile(code: Buffer): Promise<CompilerOutput> {
     const payload = { type: 'CSharp', code: code.toString('utf-8') };
 
     const response = await fetch(this.url, {

@@ -1,7 +1,7 @@
 import fetch from 'cross-fetch';
 import { Address } from 'ontology-ts-crypto';
 import { reverseBuffer } from '../common/utils';
-import { Compiler, CompilerError, Debug, FuncMap } from './types';
+import { Compiler, CompilerError, CompilerOutput, Debug, FuncMap } from './types';
 
 export class PyCompiler implements Compiler {
   url: string;
@@ -10,7 +10,7 @@ export class PyCompiler implements Compiler {
     this.url = url;
   }
 
-  async compile(code: Buffer) {
+  async compile(code: Buffer): Promise<CompilerOutput> {
     const payload = { type: 'Python', code: code.toString('utf-8') };
 
     const response = await fetch(this.url, {
