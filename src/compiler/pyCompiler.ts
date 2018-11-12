@@ -1,7 +1,7 @@
 import fetch from 'cross-fetch';
 import { Address } from 'ontology-ts-crypto';
 import { reverseBuffer } from '../common/utils';
-import { Compiler, CompilerError, Debug } from './types';
+import { Compiler, CompilerError, Debug, FuncMap } from './types';
 
 export class PyCompiler implements Compiler {
   url: string;
@@ -39,7 +39,7 @@ export class PyCompiler implements Compiler {
     const hash = reverseBuffer(Address.fromVmCode(new Buffer(avm, 'hex')).toArray()).toString('hex');
 
     let debug: Debug | undefined;
-    let funcMap: Debug | undefined;
+    let funcMap: FuncMap | undefined;
 
     try {
       if (json.debug !== undefined) {

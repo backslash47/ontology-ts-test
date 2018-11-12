@@ -4,6 +4,8 @@ export interface CompilerOutput {
   avm: Buffer;
   abi: Buffer;
   hash: string;
+  debug?: Debug;
+  funcMap?: FuncMap;
 }
 
 export interface Debug {

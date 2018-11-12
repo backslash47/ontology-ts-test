@@ -1,6 +1,6 @@
 {
   "name": "ontology-ts-test",
-  "version": "0.2.23",
+  "version": "0.2.24",
   "description": "",
   "bin": {
     "ontology-ts-test": "./lib/ontology-ts-test.js"
