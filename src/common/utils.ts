@@ -38,26 +38,27 @@ export function hex2num(str: string) {
 }
 
 export function pushParam(parameter: any, builder: ProgramBuilder) {
-  if (typeof parameter === 'number') {
+  if (typeof parameter === 'boolean') {
+    builder.pushBool(parameter);
+  } else if (typeof parameter === 'number') {
     builder.pushNum(parameter);
   } else if (parameter instanceof Long) {
     builder.pushNum(parameter);
   } else if (typeof parameter === 'string') {
     builder.pushBytes(new Buffer(parameter));
-  } else if (typeof parameter === 'boolean') {
-    builder.pushBool(parameter);
   } else if (parameter instanceof Buffer) {
     builder.pushBytes(parameter);
   } else if (parameter instanceof Address) {
     builder.pushBytes(parameter.toArray());
   } else if (parameter instanceof Map) {
-    // const mapBytes = getMapBytes(parameter);
-    // builder.pushBytes(mapBytes);
-    throw new Error('Unsupported param type');
+    pushMap(parameter, builder);
   } else if (parameter instanceof Struct) {
     pushStruct(parameter, builder);
   } else if (Array.isArray(parameter)) {
     pushArray(parameter, builder);
+  } else if (typeof parameter === 'object') {
+    // this is last, because other classes are also objects
+    pushMap(new Map(Object.entries(parameter)), builder);
   } else {
     throw new Error('Unsupported param type');
   }
@@ -81,6 +82,22 @@ export function pushStruct(parameters: Struct, builder: ProgramBuilder) {
     builder.writeOpCode(OpCode.SWAP);
     builder.writeOpCode(OpCode.APPEND);
   });
+
+  builder.writeOpCode(OpCode.FROMALTSTACK);
+}
+
+export function pushMap(parameters: Map<any, any>, builder: ProgramBuilder) {
+  builder.writeOpCode(OpCode.NEWMAP);
+  builder.writeOpCode(OpCode.TOALTSTACK);
+
+  Array.from(parameters.entries())
+    .reverse()
+    .forEach(([key, value]) => {
+      builder.writeOpCode(OpCode.DUPFROMALTSTACK);
+      pushParam(key, builder);
+      pushParam(value, builder);
+      builder.writeOpCode(OpCode.SETITEM);
+    });
 
   builder.writeOpCode(OpCode.FROMALTSTACK);
 }
