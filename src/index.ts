@@ -91,3 +91,4 @@ export { compileCli, deployCli, invokeCli, invokeFileCli } from './cli/cli';
 export { hex2num, reverseBuffer } from './common/utils';
 export { RpcClient } from './network/rpcClient';
 export { buildInvokePayload } from './invoker';
+export { Signer } from './types';
