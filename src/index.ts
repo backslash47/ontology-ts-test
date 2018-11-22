@@ -12,7 +12,7 @@ import {
   IsDeployedOptions,
   TransferOptions
 } from './types';
-import { signTransaction } from './wallet';
+import { signTransaction, signTransactionMulti } from './wallet';
 
 export function initClient({ rpcAddress = 'http://polaris1.ont.io:20336' }: InitClientOptions): Client {
   return {
@@ -41,7 +41,7 @@ export function isDeployed({ client, scriptHash }: IsDeployedOptions) {
   return deployer.isDeployed(new Address(scriptHash));
 }
 
-export function invoke({ client, account, password, ...rest }: InvokeOptions) {
+export function invoke({ client, account, password, signers, ...rest }: InvokeOptions) {
   const invoker = new Invoker(client.rpcAddress);
   return invoker.invoke({
     ...rest,
@@ -49,6 +49,10 @@ export function invoke({ client, account, password, ...rest }: InvokeOptions) {
       if (account !== undefined) {
         tx.setPayer(account.address);
         await signTransaction(tx, account, password !== undefined ? password : '');
+      }
+
+      if (signers !== undefined) {
+        await signTransactionMulti(tx, signers.length, signers);
       }
     }
   });

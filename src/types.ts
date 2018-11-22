@@ -33,6 +33,12 @@ export interface InvokeOptions extends InvokerOptions {
   client: Client;
   account?: Account;
   password?: string;
+  signers?: Signer[];
+}
+
+export interface Signer {
+  account: Account;
+  password: string;
 }
 
 export interface TransferOptions extends TransactorTransferOptions {

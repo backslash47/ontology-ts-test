@@ -1,7 +1,17 @@
 import { randomBytes } from 'crypto';
 import * as fs from 'fs';
-import { Account, Hash, PrivateKey, programFromParams, programFromPubKey, Wallet } from 'ontology-ts-crypto';
+import {
+  Account,
+  Hash,
+  PrivateKey,
+  programFromMultiPubKeys,
+  programFromParams,
+  programFromPubKey,
+  PublicKey,
+  Wallet
+} from 'ontology-ts-crypto';
 import { RawSig, Transaction } from './core/transaction';
+import { Signer } from './types';
 
 export function loadWallet(walletPath: string): Wallet {
   const f = fs.readFileSync(walletPath, 'utf8');
@@ -29,6 +39,28 @@ export async function signTransaction(tx: Transaction, account: Account, passwor
 
   const invokationSript = programFromParams([signature.serialize()]);
   const verificationScript = programFromPubKey(publicKey);
+
+  const sig = new RawSig(invokationSript, verificationScript);
+  tx.addSig(sig);
+}
+
+export async function signTransactionMulti(tx: Transaction, m: number, signers: Signer[]) {
+  const bytes = tx.serializeUnsigned();
+  const hash = Hash.sha256(Hash.sha256(bytes));
+  const signatures: Buffer[] = [];
+  const publicKeys: PublicKey[] = [];
+
+  for (const signer of signers) {
+    const privateKey = await signer.account.decryptKey(signer.password);
+    const publicKey = privateKey.getPublicKey();
+    const signature = await privateKey.sign(hash);
+
+    publicKeys.push(publicKey);
+    signatures.push(signature.serialize());
+  }
+
+  const invokationSript = programFromParams(signatures);
+  const verificationScript = programFromMultiPubKeys(m, publicKeys);
 
   const sig = new RawSig(invokationSript, verificationScript);
   tx.addSig(sig);
