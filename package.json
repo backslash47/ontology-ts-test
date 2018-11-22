@@ -1,6 +1,6 @@
 {
   "name": "ontology-ts-test",
-  "version": "0.2.31",
+  "version": "0.2.32",
   "description": "",
   "bin": {
     "ontology-ts-test": "./lib/ontology-ts-test.js"
@@ -73,6 +73,6 @@
     "commander": "^2.18.0",
     "cross-fetch": "^2.2.2",
     "long": "~4",
-    "ontology-ts-crypto": "^0.1.22"
+    "ontology-ts-crypto": "^0.1.23"
   }
 }
