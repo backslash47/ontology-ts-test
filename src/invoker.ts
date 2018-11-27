@@ -5,6 +5,8 @@ import { InvokeCode } from './core/payload/invokeCode';
 import { Invoke as InvokeEnum, Transaction } from './core/transaction';
 import { RpcClient } from './network/rpcClient';
 
+// tslint:disable:no-console
+
 export interface Invoke {
   contract: string;
   method: string;
@@ -16,6 +18,7 @@ export interface InvokerOptions extends Invoke {
   gasPrice?: string;
   preExec?: boolean;
   wait?: boolean;
+  debug?: boolean;
 
   processCallback?: (transaction: Transaction) => Promise<void> | void;
 }
@@ -49,9 +52,20 @@ export class Invoker {
     gasLimit = '20000000',
     preExec,
     processCallback,
-    wait = true
+    wait = true,
+    debug = false
   }: InvokerOptions) {
+    if (debug) {
+      console.info(`Preparing smart contract call ${method}...`);
+    }
+
     const payload = new InvokeCode(buildInvokePayload(contract, method, parameters));
+
+    if (debug) {
+      const payloadWriter = new Writer();
+      payload.serialize(payloadWriter);
+      console.log(`Payload is: ${payloadWriter.getBytes().toString('hex')}`);
+    }
 
     const tx = new Transaction({
       txType: InvokeEnum,
@@ -59,6 +73,12 @@ export class Invoker {
       gasPrice: Long.fromString(gasPrice),
       gasLimit: Long.fromString(gasLimit)
     });
+
+    if (debug) {
+      const txWriter = new Writer();
+      tx.serialize(txWriter);
+      console.log(`Unsigned TX is: ${txWriter.getBytes().toString('hex')}`);
+    }
 
     if (processCallback !== undefined) {
       const result = processCallback(tx);
