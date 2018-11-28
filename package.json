@@ -1,6 +1,6 @@
 {
   "name": "ontology-ts-test",
-  "version": "0.2.36",
+  "version": "0.2.37",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/types/index.d.ts",

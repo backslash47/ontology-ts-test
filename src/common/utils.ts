@@ -40,10 +40,16 @@ export function hex2num(str: string) {
 export function pushParam(parameter: any, builder: ProgramBuilder) {
   if (typeof parameter === 'boolean') {
     builder.pushBool(parameter);
+    builder.writeOpCode(OpCode.PUSH0);
+    builder.writeOpCode(OpCode.BOOLOR);
   } else if (typeof parameter === 'number') {
     builder.pushNum(parameter);
+    builder.writeOpCode(OpCode.PUSH0);
+    builder.writeOpCode(OpCode.ADD);
   } else if (parameter instanceof Long) {
     builder.pushNum(parameter);
+    builder.writeOpCode(OpCode.PUSH0);
+    builder.writeOpCode(OpCode.ADD);
   } else if (typeof parameter === 'string') {
     builder.pushBytes(new Buffer(parameter));
   } else if (parameter instanceof Buffer) {
