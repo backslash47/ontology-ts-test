@@ -33,7 +33,11 @@ export class Deployer {
     const client = new RpcClient(this.rpcAddress);
 
     const response = await client.getContract(address.toArray().toString('hex'));
-    if (response.result === 'unknow contract' || response.result === 'unknow contracts') {
+    if (
+      response.result === 'unknow contract' ||
+      response.result === 'unknow contracts' ||
+      response.result === 'UNKNOWN CONTRACT'
+    ) {
       return false;
     } else {
       return true;
