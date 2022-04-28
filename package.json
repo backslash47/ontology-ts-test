@@ -64,7 +64,7 @@
     "@types/long": "~4",
     "bignumber.js": "^8.0.1",
     "commander": "^2.18.0",
-    "cross-fetch": "^2.2.2",
+    "cross-fetch": "^3.1.5",
     "long": "~4",
     "ontology-ts-crypto": "^0.1.24"
   }
